@@ -6,7 +6,7 @@ metadata:
 subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: User
-  name: "'oidc:'*"
+  name: "'oidc:'{{ oidc_user }}"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

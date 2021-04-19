@@ -39,3 +39,9 @@
     pkg:
       - mlocate
     state: absent
+
+- name: install CAs login.cloud.infn.it
+  command: "{{item}}"
+  with_items:
+    - 'sudo wget "https://crt.sh/?d=2475254782" -O /usr/local/share/ca-certificates/ca.crt'
+    - 'sudo update-ca-certificates'

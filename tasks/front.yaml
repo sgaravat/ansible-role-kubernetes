@@ -227,6 +227,27 @@
                              --values /etc/grafana-values.yml"
   when: nginx_ingress.enabled
 
+- name: install longhorn 
+  block:
+    - copy:
+        src: files/longhorn-namespace.yaml
+        dest: /etc/longhorn-namespace.yml
+    - template:
+        src: templates/longhorn-values.yaml
+        dest: /etc/longhorn-values.yml
+    - command: "{{ item }}"
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+      with_items:
+      - helm repo add longhorn https://charts.longhorn.io
+      - helm repo update
+      - kubectl apply -f /etc/longhorn-namespace.yml
+      - "helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
+                             longhorn longhorn/longhorn \
+                             --namespace=longhorn-system \
+                             --values /etc/longhorn-values.yml"
+  when: longhorn.enabled
+
 - name: copy empty kubeconfig
   copy:
     src: files/kubeconfig
@@ -304,7 +325,7 @@
   shell:
     cmd: |
       chmod +x /usr/local/share/dodasts/utils/get_client \
-      && /usr/local/share/dodasts/get_client {{iam_url}} https://kubeapps.{{nginx_ingress.master_public_ip}}.myip.cloud.infn.it/oauth2/callback
+      && /usr/local/share/dodasts/utils/get_client {{iam_url}} https://kubeapps.{{nginx_ingress.master_public_ip}}.myip.cloud.infn.it/oauth2/callback
 
 - name: expose apiserver trhough oidc
   block:

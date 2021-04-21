@@ -24,6 +24,20 @@ def main():
     ) as cur_config:
         cur_config.write(cur_config_string)
 
+    # TODO: replace oidc-client-id in api server manifests
+    with open(
+        "/etc/kubernetes/manifests/kube-apiserver.yaml"
+    ) as cur_config:
+        cur_config_string = cur_config.read()
+
+    cur_config_string = cur_config_string.replace(
+        "--oidc-client-id=kubernetes", f'"--oidc-client-id={lines[-2].strip()}"'
+    )
+
+    with open(
+        "/etc/kubernetes/manifests/kube-apiserver.yaml", "w"
+    ) as cur_config:
+        cur_config.write(cur_config_string)
 
 if __name__ == "__main__":
     main()

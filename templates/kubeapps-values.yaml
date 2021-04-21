@@ -641,7 +641,7 @@ authProxy:
 
   ## Mandatory parameters for the internal auth-proxy.
   ##
-  provider: "{{iam_url}}"
+  provider: "OIDC"
   clientID: "CLIENT_ID"
   clientSecret: "CLIENT_SECRET"
   ## cookieSecret is used by oauth2-proxy to encrypt any credentials so that it requires
@@ -656,7 +656,11 @@ authProxy:
   ##
   additionalFlags:
   - --oidc-issuer-url={{iam_url}} 
+  #- --redeem-url=https://dodas-iam.cloud.cnaf.infn.it/token?audience=kubernetes
+  #- --login-url=https://dodas-iam.cloud.cnaf.infn.it/authorize?audience=kubernetes
+  # - --ssl-insecure-skip-verify
   - --cookie-secure=true
+  - --scope=openid profile offline_access email
   # - --ssl-insecure-skip-verify
   # - --cookie-secure=false
   # - --scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/cloud-platform

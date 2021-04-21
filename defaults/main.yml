@@ -36,6 +36,9 @@ kube_install_metrics: true
 # Flag to set the nginx ingress controller to be installed
 kube_flanneld_extra_args: []
 
+oidc_group: CMS
+oidc_user: dciangot
+
 node_name: AUTO
 
 nodelabel: ""

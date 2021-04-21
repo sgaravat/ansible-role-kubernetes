@@ -1,54 +1,4 @@
 ---
-- name: Create directory dodas-ts
-  file:
-    path: /usr/local/share/dodasts
-    state: directory
-    mode: 0755
-  
-- name: Create directory dodas-ts
-  file:
-    path: /usr/local/share/dodasts/utils
-    state: directory
-    mode: 0755
-
-- name: Create directory dodas-ts
-  file:
-    path: /usr/local/share/dodasts/kubeapps
-    state: directory
-    mode: 0755
-
-- name: download dodas-IAMClientRec
-  git:
-    repo: "https://github.com/DODAS-TS/dodas-IAMClientRec.git"
-    dest: /usr/local/share/dodasts/dodas-IAMClientRec
-    force: yes
-
-- name: compile dodas-IAMClientRec
-  shell:
-    cmd: go build
-    chdir: /usr/local/share/dodasts/dodas-IAMClientRec
-
-- name: link executable dodas-IAMClientRec
-  shell:
-    cmd: ln -s /usr/local/share/dodasts/dodas-IAMClientRec/dodas-IAMClientRec /usr/local/bin/dodas-IAMClientRec
-    creates: /usr/local/bin/dodas-IAMClientRec
-
-- name: Create kubeapps config
-  template:
-    src: templates/kubeapps-values.yaml
-    dest: /usr/local/share/dodasts/kubeapps/values.yaml
-  
-- name: Copy get_client script
-  template:
-    src: files/utils/get_client
-    dest: /usr/local/share/dodasts/utils/get_client
-
-- name: get client id and secret
-  shell:
-    cmd: |
-      chmod +x /usr/local/share/dodasts/utils/get_client \
-      && /usr/local/share/dodasts/get_client {{iam_url}} https://kubeapps.{{nginx_ingress.master_public_ip}}.myip.cloud.infn.it/oauth2/start
-
 - name: Create a directory if it does not exist
   file:
     path: /etc/kubernetes/pki
@@ -312,6 +262,87 @@
   register: kubeconfig
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
+
+- name: Create directory dodas-ts
+  file:
+    path: /usr/local/share/dodasts
+    state: directory
+    mode: 0755
+  
+- name: Create directory dodas-ts
+  file:
+    path: /usr/local/share/dodasts/utils
+    state: directory
+    mode: 0755
+
+- name: Create directory dodas-ts
+  file:
+    path: /usr/local/share/dodasts/kubeapps
+    state: directory
+    mode: 0755
+
+- name: download dodas-IAMClientRec
+  git:
+    repo: "https://github.com/DODAS-TS/dodas-IAMClientRec.git"
+    dest: /usr/local/share/dodasts/dodas-IAMClientRec
+    force: yes
+
+- name: compile dodas-IAMClientRec
+  shell:
+    cmd: go build
+    chdir: /usr/local/share/dodasts/dodas-IAMClientRec
+
+- name: link executable dodas-IAMClientRec
+  shell:
+    cmd: ln -s /usr/local/share/dodasts/dodas-IAMClientRec/dodas-IAMClientRec /usr/local/bin/dodas-IAMClientRec
+    creates: /usr/local/bin/dodas-IAMClientRec
+
+- name: Create kubeapps config
+  template:
+    src: templates/kubeapps-values.yaml
+    dest: /usr/local/share/dodasts/kubeapps/values.yaml
+  
+- name: Copy get_client script
+  template:
+    src: files/utils/get_client
+    dest: /usr/local/share/dodasts/utils/get_client
+
+- name: get client id and secret
+  shell:
+    cmd: |
+      chmod +x /usr/local/share/dodasts/utils/get_client \
+      && /usr/local/share/dodasts/get_client {{iam_url}} https://kubeapps.{{nginx_ingress.master_public_ip}}.myip.cloud.infn.it/oauth2/start
+
+- name: expose apiserver trhough oidc
+  block:
+    - template:
+        src: templates/oidc-rolebinding.yaml
+        dest: /etc/oidc-rolebinding.yaml
+    - command: "{{ item }}"
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+      with_items:
+      - kubectl apply -f /etc/oidc-rolebinding.yaml
+
+- name: install kubeapps 
+  block:
+    - template:
+        src: templates/kubeapps-values.yaml
+        dest: /etc/kubeapps-values.yml
+    - copy:
+        src: files/kubeapps-namespace.yaml
+        dest: /etc/kubeapps-namespace.yml
+    - command: "{{ item }}"
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+      with_items:
+      - helm repo add bitnami https://charts.bitnami.com/bitnami
+      - helm repo update
+      - kubectl apply -f /etc/kubeapps-namespace.yml
+      - "helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
+                             kubeapps bitnami/kubeapps \
+                             --namespace=kubeapps \
+                             --values /etc/kubeapps-values.yml"
 
 - name: KUBECONFIG file
   debug:

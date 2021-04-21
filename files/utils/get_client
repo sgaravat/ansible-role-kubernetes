@@ -5,9 +5,12 @@ from sys import argv
 
 def main():
     client = subprocess.check_output(
-        f"IAM_INSTANCE={argv[1]} OAUTH_CALLBACK={argv[2]} dodas-IAMClientRec kubeapps-client",
+        "dodas-IAMClientRec kubeapps-client",
         shell=True,
-    )
+        env={
+            "IAM_INSTANCE": argv[1],
+            "OAUTH_CALLBACK": argv[2],
+        })
     lines = [line for line in client.decode("utf-8").split("\n") if line]
 
     with open(
@@ -16,8 +19,8 @@ def main():
         cur_config_string = cur_config.read()
 
     cur_config_string = cur_config_string.replace(
-        "CLIENT_ID", f'"{lines[-2].strip()}"'
-    ).replace("CLIENT_SECRET", f'"{lines[-1].strip()}"')
+        "CLIENT_ID", lines[-2].strip()
+    ).replace("CLIENT_SECRET", lines[-1].strip())
 
     with open(
         "/usr/local/share/dodast/kubeapps/values.yaml", "w"
@@ -31,7 +34,7 @@ def main():
         cur_config_string = cur_config.read()
 
     cur_config_string = cur_config_string.replace(
-        "--oidc-client-id=kubernetes", f'"--oidc-client-id={lines[-2].strip()}"'
+        "--oidc-client-id=kubernetes", "--oidc-client-id="+lines[-2].strip()
     )
 
     with open(

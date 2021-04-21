@@ -304,7 +304,7 @@
   shell:
     cmd: |
       chmod +x /usr/local/share/dodasts/utils/get_client \
-      && /usr/local/share/dodasts/get_client {{iam_url}} https://kubeapps.{{nginx_ingress.master_public_ip}}.myip.cloud.infn.it/oauth2/start
+      && /usr/local/share/dodasts/get_client {{iam_url}} https://kubeapps.{{nginx_ingress.master_public_ip}}.myip.cloud.infn.it/oauth2/callback
 
 - name: expose apiserver trhough oidc
   block:

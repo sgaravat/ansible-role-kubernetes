@@ -14,7 +14,7 @@ def main():
     lines = [line for line in client.decode("utf-8").split("\n") if line]
 
     with open(
-        "/usr/local/share/dodast/kubeapps/values.yaml"
+        "/usr/local/share/dodasts/kubeapps/values.yaml"
     ) as cur_config:
         cur_config_string = cur_config.read()
 
@@ -23,7 +23,7 @@ def main():
     ).replace("CLIENT_SECRET", lines[-1].strip())
 
     with open(
-        "/usr/local/share/dodast/kubeapps/values.yaml", "w"
+        "/usr/local/share/dodasts/kubeapps/values.yaml", "w"
     ) as cur_config:
         cur_config.write(cur_config_string)
 

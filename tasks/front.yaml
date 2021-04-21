@@ -326,6 +326,12 @@
     cmd: |
       chmod +x /usr/local/share/dodasts/utils/get_client \
       && /usr/local/share/dodasts/utils/get_client {{iam_url}} https://kubeapps.{{nginx_ingress.master_public_ip}}.myip.cloud.infn.it/oauth2/callback
+  notify: restart kubeapi
+
+- name: wait Kube to start
+  wait_for:
+    host: "{{ kube_api_server }}"
+    port: 6443
 
 - name: expose apiserver trhough oidc
   block:

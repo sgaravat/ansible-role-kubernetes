@@ -641,7 +641,7 @@ authProxy:
 
   ## Mandatory parameters for the internal auth-proxy.
   ##
-  provider: "OIDC"
+  provider: "oidc"
   clientID: "CLIENT_ID"
   clientSecret: "CLIENT_SECRET"
   ## cookieSecret is used by oauth2-proxy to encrypt any credentials so that it requires

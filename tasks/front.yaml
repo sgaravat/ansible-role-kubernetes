@@ -346,9 +346,6 @@
 
 - name: install kubeapps 
   block:
-    - template:
-        src: templates/kubeapps-values.yaml
-        dest: /etc/kubeapps-values.yml
     - copy:
         src: files/kubeapps-namespace.yaml
         dest: /etc/kubeapps-namespace.yml
@@ -362,7 +359,7 @@
       - "helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
                              kubeapps bitnami/kubeapps \
                              --namespace=kubeapps \
-                             --values /etc/kubeapps-values.yml"
+                             --values /usr/local/share/dodasts/kubeapps/values.yaml"
 
 - name: KUBECONFIG file
   debug:

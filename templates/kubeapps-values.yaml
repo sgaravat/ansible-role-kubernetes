@@ -661,6 +661,10 @@ authProxy:
   # - --ssl-insecure-skip-verify
   - --cookie-secure=true
   - --scope=openid profile offline_access email
+  - --cookie-secure=true
+  - --cookie-refresh=5m
+  - --cookie-expire=60m
+  - --cookie-samesite=none
   # - --ssl-insecure-skip-verify
   # - --cookie-secure=false
   # - --scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/cloud-platform

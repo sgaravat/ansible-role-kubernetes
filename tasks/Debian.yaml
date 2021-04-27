@@ -21,9 +21,9 @@
 - name: Install kubernetes packages
   apt:
     pkg:
-      - kubelet={{ kube_version }}*
-      - kubeadm={{ kube_version }}*
-      - kubectl={{ kube_version }}*
+      - kubelet={{ kube_version }}-00
+      - kubeadm={{ kube_version }}-00
+      - kubectl={{ kube_version }}-00
   when: kube_version != "latest"
 
 - name: Install kubernetes packages

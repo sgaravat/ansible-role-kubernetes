@@ -277,6 +277,7 @@
     && kubectl config --kubeconfig=/etc/kubeconfig use-context public
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
+  ignore_errors: yes
 
 - name: register kubeconfig
   shell: kubectl config  --kubeconfig=/etc/kubeconfig view --raw

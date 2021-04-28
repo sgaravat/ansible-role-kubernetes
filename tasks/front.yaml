@@ -26,7 +26,7 @@
       regexp: '^net.bridge.bridge-nf-call-iptables'
       line: 'net.bridge.bridge-nf-call-iptables = 1'
       create: yes
-    notify: sysctl-system
+  - command: sysctl --system
   - template:
       src: templates/flannel.yaml
       dest: /etc/kube-flannel.yml
@@ -62,8 +62,21 @@
     line: '    - {{item.option}}={{item.value}}'
     regexp: '^    - {{item.option}}='
     insertafter: '    - kube-apiserver'
-  notify: restart kubeapi
   with_items: "{{ kube_apiserver_options }}"
+
+- command: killall kube-apiserver
+  ignore_errors: yes
+  name: killall kube-apiserver
+
+- name: restart kubelet to restart kubeapi
+  service:
+    name: kubelet
+    state: restarted
+
+- name: wait Kube to start
+  wait_for:
+    host: "{{ kube_api_server }}"
+    port: 6443
 
 - name: wait Kube to start
   wait_for:
@@ -327,7 +340,20 @@
     cmd: |
       chmod +x /usr/local/share/dodasts/utils/get_client \
       && /usr/local/share/dodasts/utils/get_client {{iam_url}} https://kubeapps.{{nginx_ingress.master_public_ip}}.myip.cloud.infn.it/oauth2/callback
-  notify: restart kubeapi
+
+- command: killall kube-apiserver
+  ignore_errors: yes
+  name: killall kube-apiserver
+
+- name: restart kubelet to restart kubeapi
+  service:
+    name: kubelet
+    state: restarted
+
+- name: wait Kube to start
+  wait_for:
+    host: "{{ kube_api_server }}"
+    port: 6443
 
 - name: wait Kube to start
   wait_for:

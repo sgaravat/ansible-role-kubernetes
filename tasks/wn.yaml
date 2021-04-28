@@ -53,6 +53,13 @@
     - restart kubelet
   when: kubelet_extra_args != ''
 
+- name: restart kubelet
+  service:
+    name: kubelet
+    daemon_reload: yes
+    state: restarted
+  when: kubelet_extra_args != ''
+
 - name: wait 5min for flannel and restart kubelet
   block:
     - name: wait for flannel and restart kubelet

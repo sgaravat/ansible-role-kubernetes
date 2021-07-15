@@ -45,3 +45,4 @@ oidc_user: dciangot
 node_name: AUTO
 
 nodelabel: ""
+kube_discovery: --discovery-token-unsafe-skip-ca-verification

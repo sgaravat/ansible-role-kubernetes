@@ -1,0 +1,21 @@
+---
+- name: Ensure rpcbind is running
+  service:
+    name: rpcbind
+    state: started
+    enabled: yes
+
+- name: Create a directory if it does not exist
+  file:
+    path: /etc/kubernetes/pki
+    state: directory
+    mode: "0755"
+
+- name: Create auth data file with an admin user
+  copy:
+    content: '{{kube_admin_token}},{{kube_admin_username}},100,"users,system:masters"'
+    dest: /etc/kubernetes/pki/auth
+    mode: 600
+
+- name: Add node to kube cluster master ha
+  command: kubeadm join --control-plane --token {{kube_token}} {{kube_server}}:6443 --discovery-token-unsafe-skip-ca-verification creates=/etc/kubernetes/kubelet.conf

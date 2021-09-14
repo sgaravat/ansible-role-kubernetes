@@ -10,6 +10,7 @@ def main():
         env={
             "IAM_INSTANCE": argv[1],
             "OAUTH_CALLBACK": argv[2],
+            "ACCESS_TOKEN": argv[3],
         })
     lines = [line for line in client.decode("utf-8").split("\n") if line]
 

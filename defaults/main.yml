@@ -1,5 +1,5 @@
 # Version to install or latest
-kube_version: latest 
+kube_version: 1.20.1 
 # Type of node front or wn
 kube_type_of_node: front
 # IP address or name of the Kube front node
@@ -46,3 +46,5 @@ node_name: AUTO
 
 nodelabel: ""
 kube_discovery: --discovery-token-unsafe-skip-ca-verification
+
+access_token: ""

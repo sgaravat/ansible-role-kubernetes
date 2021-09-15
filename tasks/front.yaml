@@ -318,7 +318,7 @@
 
 - name: get dodas-IAMClientRec
   shell:
-    cmd: wget https://github.com/DODAS-TS/dodas-IAMClientRec/releases/download/v0.0.6-pre1/dodas-IAMClientRec -O /usr/local/share/dodasts/dodas-IAMClientRec && chmod +x /usr/local/share/dodasts/dodas-IAMClientRec
+    cmd: wget https://github.com/DODAS-TS/dodas-IAMClientRec/releases/download/v0.0.6-pre2/dodas-IAMClientRec -O /usr/local/share/dodasts/dodas-IAMClientRec && chmod +x /usr/local/share/dodasts/dodas-IAMClientRec
   when: client_id == "" 
 
 - name: link executable dodas-IAMClientRec

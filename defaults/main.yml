@@ -48,3 +48,5 @@ nodelabel: ""
 kube_discovery: --discovery-token-unsafe-skip-ca-verification
 
 access_token: ""
+
+client_id: ""

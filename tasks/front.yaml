@@ -348,7 +348,14 @@
 - name: set client_id in kube apiserver
   shell:
     cmd: |
-      sed -i "s/--oidc-client-id=kubernetes/--oidc-client-id={{client_id}}/"
+      sed -i "s/--oidc-client-id=kubernetes/--oidc-client-id={{client_id}}/" /etc/kubernetes/manifests/kube-apiserver.yaml
+  when: client_id != "" 
+
+- name: set client_id and secret in kubeapps value
+  shell:
+    cmd: |
+      sed -i "s/CLIENT_ID/{{client_id}}/" /etc/kubernetes/manifests/kube-apiserver.yaml
+      sed -i "s/CLIENT_SECRET/{{client_secret}}/" /etc/kubernetes/manifests/kube-apiserver.yaml
   when: client_id != "" 
 
 - command: killall kube-apiserver

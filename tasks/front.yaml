@@ -354,8 +354,8 @@
 - name: set client_id and secret in kubeapps value
   shell:
     cmd: |
-      sed -i "s/CLIENT_ID/{{client_id}}/" /etc/kubernetes/manifests/kube-apiserver.yaml
-      sed -i "s/CLIENT_SECRET/{{client_secret}}/" /etc/kubernetes/manifests/kube-apiserver.yaml
+      sed -i "s/CLIENT_ID/{{client_id}}/" /usr/local/share/dodasts/kubeapps/values.yaml
+      sed -i "s/CLIENT_SECRET/{{client_secret}}/" /usr/local/share/dodasts/kubeapps/values.yaml
   when: client_id != "" 
 
 - command: killall kube-apiserver

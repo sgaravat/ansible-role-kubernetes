@@ -393,10 +393,8 @@
     - copy:
         src: files/kubeapps-namespace.yaml
         dest: /etc/kubeapps-namespace.yml
-    - environment:
-        KUBECONFIG: /etc/kubernetes/admin.conf
-      shell: |
-        && cd /usr/local/share/dodasts/ && wget https://github.com/kubeapps/kubeapps/archive/refs/heads/master.zip \
+    - shell: |
+        cd /usr/local/share/dodasts/ && wget https://github.com/kubeapps/kubeapps/archive/refs/heads/master.zip \
         && cd /usr/local/share/dodasts/ && unzip master.zip \
         && cd /usr/local/share/dodasts/kubeapps-master/chart/kubeapps/ && helm dependency build ./ \
         && helm repo add bitnami https://charts.bitnami.com/bitnami \
@@ -405,8 +403,9 @@
         && helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
                              kubeapps /usr/local/share/dodasts/kubeapps-master/chart/kubeapps/ \
                              --namespace=kubeapps \
-                             --values /usr/local/share/dodasts/kubeapps/values.yaml"
-                             #kubeapps bitnami/kubeapps \
+                             --values /usr/local/share/dodasts/kubeapps/values.yaml
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
 - name: KUBECONFIG file
   debug:
     var: kubeconfig.stdout.split('\n')

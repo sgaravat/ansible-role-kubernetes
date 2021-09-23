@@ -62,7 +62,8 @@ ingress:
 
   ## Set this to true in order to add the corresponding annotations for cert-manager
   ##
-  certManager: true
+  certManager:
+    clusterIssuer: selfsigned-issuer
 
   ## When the ingress is enabled, a host pointing to this will be created
   ##

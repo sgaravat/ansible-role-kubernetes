@@ -396,9 +396,9 @@
     - shell: |
         cd /usr/local/share/dodasts/ && wget https://github.com/kubeapps/kubeapps/archive/refs/heads/master.zip \
         && cd /usr/local/share/dodasts/ && unzip master.zip \
-        && cd /usr/local/share/dodasts/kubeapps-master/chart/kubeapps/ && helm dependency build ./ \
         && helm repo add bitnami https://charts.bitnami.com/bitnami \
         && helm repo update \
+        && cd /usr/local/share/dodasts/kubeapps-master/chart/kubeapps/ && helm dependency build ./ \
         && kubectl apply -f /etc/kubeapps-namespace.yml \
         && helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
                              kubeapps /usr/local/share/dodasts/kubeapps-master/chart/kubeapps/ \

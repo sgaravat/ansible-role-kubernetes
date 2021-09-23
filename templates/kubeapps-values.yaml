@@ -265,6 +265,10 @@ apprepository:
   initialRepos:
     - name: dodas
       url: https://dodas-ts.github.io/helm_charts
+    - name: openebs
+      url: https://openebs.github.io/charts
+    - name: longhorn
+      url: https://charts.longhorn.io
   # Additional repositories
   # - name: chartmuseum
   #   url: https://chartmuseum.default:8080
@@ -663,8 +667,8 @@ authProxy:
   - --cookie-secure=true
   - --scope=openid profile offline_access email
   - --cookie-secure=true
-  - --cookie-refresh=50m
-  - --cookie-expire=60m
+  - --cookie-refresh=2m
+  - --cookie-expire=120m
   - --cookie-samesite=none
   # - --ssl-insecure-skip-verify
   # - --cookie-secure=false

@@ -394,14 +394,14 @@
         src: files/kubeapps-namespace.yaml
         dest: /etc/kubeapps-namespace.yml
     - shell: |
-        cd /usr/local/share/dodasts/ && wget https://github.com/kubeapps/kubeapps/archive/refs/heads/master.zip \
-        && cd /usr/local/share/dodasts/ && unzip master.zip \
+        cd /usr/local/share/dodasts/ && wget https://github.com/kubeapps/kubeapps/archive/refs/tags/v2.4.1.zip \
+        && cd /usr/local/share/dodasts/ && unzip kubeapps-2.4.1.zip \
         && helm repo add bitnami https://charts.bitnami.com/bitnami \
         && helm repo update \
-        && cd /usr/local/share/dodasts/kubeapps-master/chart/kubeapps/ && helm dependency build ./ \
+        && cd /usr/local/share/dodasts/kubeapps-2.4.1/chart/kubeapps/ && helm dependency build ./ \
         && kubectl apply -f /etc/kubeapps-namespace.yml \
         && helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
-                             kubeapps /usr/local/share/dodasts/kubeapps-master/chart/kubeapps/ \
+                             kubeapps /usr/local/share/dodasts/kubeapps-2.4.1/chart/kubeapps/ \
                              --namespace=kubeapps \
                              --values /usr/local/share/dodasts/kubeapps/values.yaml
       environment:

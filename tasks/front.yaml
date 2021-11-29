@@ -399,7 +399,7 @@
         && kubectl apply -f /etc/kubeapps-namespace.yml \
         && helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
                              kubeapps bitnami-kubeapps \
-                             --version=7.5.4 \
+                             --version=7.5.10 \
                              --namespace=kubeapps \
                              --values /usr/local/share/dodasts/kubeapps/values.yaml
       environment:

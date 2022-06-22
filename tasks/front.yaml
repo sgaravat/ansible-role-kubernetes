@@ -118,6 +118,7 @@
                               ingress-nginx \
                               ingress-nginx/ingress-nginx \
                               --namespace=ingress-nginx \
+                              --version 4.1.4 \
                               --values /etc/nginx-ingress-values.yml"
   when: nginx_ingress.enabled
 
@@ -136,7 +137,7 @@
           - "helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
                       cert-manager jetstack/cert-manager \
                       --namespace cert-manager \
-                      --version v1.1.0 \
+                      --version v1.8.1 \
                       --set installCRDs=true"
   when: nginx_ingress.enabled
 
@@ -174,6 +175,7 @@
       - "helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
                              dashboard kubernetes-dashboard/kubernetes-dashboard \
                              --namespace=kube-system \
+                             --version 5.7.0 \
                              --values /etc/dashboard-values.yml"
   when: nginx_ingress.enabled
 
@@ -195,6 +197,7 @@
       - "helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
                              prometheus prometheus/prometheus \
                              --namespace=prometheus \
+                             --version 15.10.1 \
                              --values /etc/prometheus-values.yml"
   when: nginx_ingress.enabled
 
@@ -212,6 +215,7 @@
       - kubectl apply -f /etc/eagle-namespace.yml
       - "helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
                              kube-eagle kube-eagle/kube-eagle \
+                             --version 2.0.0 \
                              --namespace=kube-eagle"
   when: nginx_ingress.enabled
 
@@ -237,29 +241,9 @@
       - "helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
                              grafana grafana/grafana \
                              --namespace=grafana \
+                             --version 6.30.3 \
                              --values /etc/grafana-values.yml"
   when: nginx_ingress.enabled
-
-- name: install longhorn 
-  block:
-    - copy:
-        src: files/longhorn-namespace.yaml
-        dest: /etc/longhorn-namespace.yml
-    - template:
-        src: templates/longhorn-values.yaml
-        dest: /etc/longhorn-values.yml
-    - command: "{{ item }}"
-      environment:
-        KUBECONFIG: /etc/kubernetes/admin.conf
-      with_items:
-      - helm repo add longhorn https://charts.longhorn.io
-      - helm repo update
-      - kubectl apply -f /etc/longhorn-namespace.yml
-      - "helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
-                             longhorn longhorn/longhorn \
-                             --namespace=longhorn-system \
-                             --values /etc/longhorn-values.yml"
-  when: longhorn.enabled
 
 - name: copy empty kubeconfig
   copy:
@@ -399,7 +383,7 @@
         && kubectl apply -f /etc/kubeapps-namespace.yml \
         && helm upgrade --install --cleanup-on-fail --wait --timeout 30m0s \
                              kubeapps bitnami/kubeapps \
-                             --version=7.6.1 \
+                             --version=8.1.11 \
                              --namespace=kubeapps \
                              --values /usr/local/share/dodasts/kubeapps/values.yaml
       environment:
